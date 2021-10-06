@@ -63,7 +63,8 @@ class RemoteDesktop:
             streamer = threading.Thread(target=self.send_stream, args=(writer, stream_func))
             streamer.start()
 
-            self.apply_controls(reader)
+            controller = threading.Thread(target=self.apply_controls, args=(reader, ))
+            controller.start()
         else:
             data = self.get_data(reader)
             gui = remote_gui.GUI(self.res, self.isctrld, writer)

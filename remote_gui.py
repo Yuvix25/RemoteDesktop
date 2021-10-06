@@ -46,6 +46,5 @@ class TkRoot:
         self.tk.bind("<KeyPress>", self.onKeyPress)
 
     def onKeyPress(self, event):
-        data = base64.b64encode(f"{event.keycode}|{event.type}".encode("utf-8"))
-        
+        data = base64.b64encode(f"{event.keycode} {event.state}".encode("utf-8"))
         self.stream.send(data)
