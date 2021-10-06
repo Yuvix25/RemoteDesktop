@@ -1,4 +1,4 @@
-import threading
+import threading, base64
 from tkinter import *
 from PIL import ImageTk, Image
 import numpy as np
@@ -46,4 +46,6 @@ class TkRoot:
         self.tk.bind("<KeyPress>", self.onKeyPress)
 
     def onKeyPress(self, event):
-        print(event)
+        data = base64.b64encode(f"{event.keycode}|{event.type}".encode("utf-8"))
+        
+        self.stream.send(data)

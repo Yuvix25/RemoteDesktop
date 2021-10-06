@@ -40,6 +40,13 @@ class RemoteDesktop:
             data = socket.recv_string()
             data = base64.b64decode(data)
             yield data
+
+    def apply_controls(self, socket):
+        while True:
+            data = socket.recv_string()
+            data = base64.b64decode(data).decode()
+            print(data)
+
     
     def initiate_connection(self, self_port, other_port):
         writer = self.initiate_writing_connection(self_port)
@@ -52,12 +59,15 @@ class RemoteDesktop:
 
             return buffer
 
-        streamer = threading.Thread(target=self.send_stream, args=(writer, stream_func))
-        streamer.start()
+        if self.isctrld:
+            streamer = threading.Thread(target=self.send_stream, args=(writer, stream_func))
+            streamer.start()
 
-        data = self.get_data(reader)
-        gui = remote_gui.GUI(self.res, self.isctrld, writer)
-        gui.stream_loop(data)
+            self.apply_controls(reader)
+        else:
+            data = self.get_data(reader)
+            gui = remote_gui.GUI(self.res, self.isctrld, writer)
+            gui.stream_loop(data)
 
         # if self.isctrld:
         #     def stream_func():
