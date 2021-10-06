@@ -12,13 +12,13 @@ class RemoteDesktop:
     
     def initiate_writing_connection(self, port):
         socket = self.context.socket(zmq.PUB)
-        socket.connect(f'tcp://localhost:{port}')
+        socket.bind(f'tcp://0.0.0.0:{port}')
 
         return socket
     
     def initiate_reading_connection(self, port):
         socket = self.context.socket(zmq.SUB)
-        socket.bind(f'tcp://*:{port}')
+        socket.connect(f'tcp://10.79.48.63:{port}')
         socket.setsockopt_string(zmq.SUBSCRIBE, '')
 
         return socket
